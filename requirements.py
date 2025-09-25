@@ -163,161 +163,56 @@ api_endpoints = {
 # Responsibilities for the ML/AI Engineer
 
 responsibilities = [
-    "Design and implement a hybrid reasoning engine combining LLM orchestration for NLU and explanations",
-    "Create a symptom ontology/knowledge graph using SNOMED CT, HPO, ICD-10, and LOINC for lab codes",
-    "Build a triage safety system with deterministic overrides for red-flag symptoms",
-    "Develop an offline evaluation harness using synthetic clinical vignettes",
-    "Collaborate with clinicians to validate outputs",
-    "Ensure compliance with HIPAA and privacy best practices",
-    "Implement continuous learning from user interactions and clinician feedback",
-    "Design explainable AI components to provide transparency in medical recommendations"
+    "Design and implement a hybrid reasoning engine combining LLMs and medical knowledge graphs.",
+    "Develop and maintain the medical knowledge graph, ensuring its accuracy and regular updates.",
+    "Implement and test the deterministic triage safety system for critical medical conditions.",
+    "Build and execute the evaluation harness for continuous offline testing of the system.",
+    "Collaborate with clinicians to validate the model's outputs and improve performance.",
+    "Architect and deploy the system on a cloud infrastructure, ensuring scalability and reliability.",
+    "Implement a privacy compliance module that ensures HIPAA compliance through data anonymization and encryption.",
+    "Develop and integrate a RAG component using vector databases like Pinecone or Weaviate.",
+    "Create a robust API for the symptom checker service.",
+    "Monitor system performance and logs for errors and operational issues."
 ]
 
-# Required Experience
+# High-Level Functionality Walkthrough
 
-required_experience = [
-    "Strong ML/AI engineering skills (Python, TypeScript, PyTorch/TensorFlow, vector DBs, RAG pipelines, LLM tool-calling)",
-    "Experience with medical ontologies: SNOMED CT, HPO, ICD-10, LOINC",
-    "Prior work on clinical decision support systems, symptom checkers, or triage/intake AI",
-    "Experience implementing evaluation metrics (Top-N accuracy, precision/recall, Brier scores, calibration)",
-    "Understanding of healthcare compliance (HIPAA, FDA considerations for CDS tools)",
-    "Proficiency in knowledge graph design and implementation",
-    "Experience with LLM prompt engineering and chain-of-thought reasoning"
-]
-
-# Nice-to-Have Skills
-
-nice_to_have = [
-    "Familiarity with Bayesian networks or probabilistic reasoning for symptom → condition scoring",
-    "Experience with FHIR/EHR integration",
-    "Exposure to functional medicine / integrative medicine frameworks",
-    "Background in explainability/interpretability in healthcare AI",
-    "Experience with medical NLP and entity extraction",
-    "Knowledge of medical device regulatory pathways",
-    "Experience with differential diagnosis methodologies"
-]
-
-# Implementation Roadmap
-
-roadmap = {
-    "phase1": {
-        "name": "Foundation Building",
-        "tasks": [
-            "Set up development environment",
-            "Implement basic knowledge graph structure",
-            "Create initial symptom-condition mappings",
-            "Establish data security and privacy framework"
-        ],
-        "duration": "4-6 weeks",
-        "deliverables": [
-            "Knowledge graph schema",
-            "Initial ontology mappings",
-            "Development environment documentation"
-        ]
+functionality = {
+    "step_1": {
+        "name": "Symptom Input",
+        "description": "User provides symptoms via a natural language query."
     },
-    "phase2": {
-        "name": "Core Engine Development",
-        "tasks": [
-            "Develop LLM orchestration layer",
-            "Implement triage safety rules",
-            "Create initial lab recommendation logic",
-            "Build basic API endpoints"
-        ],
-        "duration": "8-10 weeks",
-        "deliverables": [
-            "Functional reasoning engine",
-            "Triage rule documentation",
-            "API documentation",
-            "Initial integration tests"
-        ]
+    "step_2": {
+        "name": "PII Anonymization",
+        "description": "Input is processed to remove any personally identifiable information (PII) for HIPAA compliance.",
+        "outcome": "Anonymized symptom query."
     },
-    "phase3": {
-        "name": "Evaluation and Refinement",
-        "tasks": [
-            "Build evaluation harness",
-            "Generate synthetic test cases",
-            "Optimize system based on metrics",
-            "Implement feedback collection mechanisms"
-        ],
-        "duration": "6-8 weeks",
-        "deliverables": [
-            "Evaluation framework",
-            "Test case library",
-            "Performance metrics dashboard",
-            "System optimization report"
-        ]
+    "step_3": {
+        "name": "Triage Safety Check",
+        "description": "The anonymized query is first passed through a deterministic rule-based engine to check for red-flag symptoms.",
+        "outcome": "If a red-flag is found, an immediate emergency override is triggered. Otherwise, proceed to the next step."
     },
-    "phase4": {
-        "name": "Clinical Validation and Deployment",
-        "tasks": [
-            "Conduct clinical validation sessions",
-            "Implement feedback and refinements",
-            "Prepare for production deployment",
-            "Create monitoring and maintenance plan"
-        ],
-        "duration": "4-6 weeks",
-        "deliverables": [
-            "Validation results report",
-            "Production-ready system",
-            "Deployment documentation",
-            "Maintenance procedures"
-        ]
+    "step_4": {
+        "name": "Symptom-Condition Mapping",
+        "description": "The query is mapped to terms in the medical knowledge graph to identify potential conditions and lab recommendations.",
+        "outcome": "A list of potential medical conditions and relevant lab tests with associated probabilities/relevance scores."
+    },
+    "step_5": {
+        "name": "RAG-based Information Retrieval",
+        "description": "If a relevant document is uploaded by the user, the RAG system searches it for contextual information to ground the LLM's response.",
+        "outcome": "Extracted context from user documents."
+    },
+    "step_6": {
+        "name": "LLM-based Reasoning & Explanation",
+        "description": "The LLM synthesizes information from the knowledge graph and any retrieved documents to generate a comprehensive and empathetic response.",
+        "outcome": "A natural language explanation of potential conditions, lab recommendations, and a personalized triage plan."
+    },
+    "step_7": {
+        "name": "Follow-up Questions",
+        "description": "The system may generate follow-up questions to refine the diagnosis and guide the user.",
+        "outcome": "A list of questions to gather additional information."
     }
 }
-
-# Example Usage
-
-def example_symptom_checker_flow():
-    """
-    Pseudocode demonstrating the basic flow of the symptom checker system.
-    """
-    # Initialize system components
-    knowledge_graph = initialize_medical_knowledge_graph()
-    llm_orchestrator = initialize_llm_pipeline()
-    triage_system = initialize_safety_triage()
-    
-    # Example user input
-    user_symptoms = ["persistent headache", "fever", "sensitivity to light"]
-    user_demographics = {"age": 35, "sex": "female", "medical_history": ["migraine"]}
-    
-    # Process through reasoning engine
-    parsed_symptoms = llm_orchestrator.extract_medical_entities(user_symptoms)
-    mapped_symptoms = knowledge_graph.map_to_ontology(parsed_symptoms)
-    
-    # Generate potential conditions
-    potential_conditions = knowledge_graph.query_conditions(mapped_symptoms, user_demographics)
-    ranked_conditions = rank_conditions_by_probability(potential_conditions, user_demographics)
-    
-    # Safety check
-    triage_result = triage_system.evaluate(mapped_symptoms, ranked_conditions)
-    if triage_result.requires_emergency:
-        return generate_emergency_response(triage_result.reason)
-    
-    # Generate lab recommendations
-    recommended_labs = generate_lab_recommendations(ranked_conditions, user_demographics)
-    
-    # Generate explanation
-    explanation = llm_orchestrator.generate_explanation(
-        symptoms=mapped_symptoms,
-        conditions=ranked_conditions[:3],  # Top 3 conditions
-        labs=recommended_labs,
-        triage=triage_result
-    )
-    
-    # Generate follow-up questions for additional information
-    follow_up_questions = generate_follow_up_questions(
-        symptoms=mapped_symptoms,
-        conditions=ranked_conditions[:5],
-        current_information=user_demographics
-    )
-    
-    return {
-        "potential_conditions": ranked_conditions[:5],  # Top 5 conditions
-        "recommended_labs": recommended_labs,
-        "triage_level": triage_result.level,
-        "explanation": explanation,
-        "follow_up_questions": follow_up_questions
-    }
 
 # Technical Stack Recommendations
 
@@ -348,9 +243,63 @@ tech_stack = {
         "Sentry for error tracking"
     ],
     "security": [
-        "JWT for authentication",
-        "Role-based access control",
-        "Data encryption at rest and in transit",
-        "Regular security audits"
+        "TLS encryption for data in transit",
+        "Vault for secret management",
+        "AWS KMS or Azure Key Vault for key management"
     ]
 }
+
+def analyze_symptoms(symptoms_list: list, demographics: dict = None) -> dict:
+    """
+    Analyzes a list of symptoms and provides potential conditions, triage recommendations, and lab tests.
+    
+    This function demonstrates the core logic of the symptom checker.
+    """
+    # Step 1: Triage Safety Check (deterministic)
+    triage_result = enhanced_triage_check(" ".join(symptoms_list))
+    if triage_result["triage_needed"]:
+        return {
+            "triage_level": triage_result["level"],
+            "explanation": triage_result["message"]
+        }
+    
+    # Step 2: Knowledge Graph-based analysis
+    ranked_conditions, recommended_labs = get_enhanced_recommendations(symptoms_list)
+    
+    # Step 3: LLM-based Explanation (simplified for example)
+    explanation = "Based on the symptoms provided and information from our knowledge graph, here's a potential analysis:\n\n"
+    
+    if ranked_conditions:
+        explanation += "### Potential Conditions\n"
+        for cond in ranked_conditions:
+            explanation += f"- **{cond.name}**: A possible condition to consider.\n"
+            
+    if recommended_labs:
+        explanation += "\n### Recommended Lab Tests\n"
+        for lab in recommended_labs:
+            explanation += f"- **{lab.name}** ({lab.loinc_code}): {lab.rationale}\n"
+            
+    # Determine overall triage level from the highest priority condition
+    if ranked_conditions:
+        triage_result = ranked_conditions[0].triage_level
+    else:
+        triage_result = 'SELF_CARE' # Default to self-care if no conditions found
+        
+    # Step 4: Generate follow-up questions to get additional information
+    follow_up_questions = generate_follow_up_questions(
+        symptoms=[],
+        conditions=ranked_conditions[:5],
+        current_information=demographics
+    )
+    
+    return {
+        "potential_conditions": ranked_conditions[:5],  # Top 5 conditions
+        "recommended_labs": recommended_labs,
+        "triage_level": triage_result,
+        "explanation": explanation,
+        "follow_up_questions": follow_up_questions
+    }
+
+# This is a placeholder function, its actual implementation would be in a different file
+def generate_follow_up_questions(symptoms, conditions, current_information):
+    return ["Can you describe the pain more precisely?", "How long have you had these symptoms?", "Are you experiencing any other symptoms?"]
